@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администрация</title>
+    <style>
+      /* Стили для списка кнопок */
+.nav.flex-column.nav-pills.me-3 {
+    /* Расположение кнопок по вертикали */
+    flex-direction: column;
+    /* Установка отступов между кнопками */
+    gap: 10px;
+    /* Цвет фона списка кнопок */
+    background-color: #f5f5f5;
+    /* Параметры рамки */
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    /* Добавление тени */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для кнопок */
+.nav.flex-column.nav-pills.me-3 .nav-link {
+    /* Цвет текста кнопки */
+    color: #000;
+    /* Цвет фона кнопки по умолчанию */
+    background-color: #fff;
+    /* Установка отступов внутри кнопки */
+    padding: 10px;
+    /* Закругление углов кнопки */
+    border-radius: 5px;
+    /* Выравнивание текста по левому краю */
+    text-align: left;
+}
+
+/* При наведении на кнопку */
+.nav.flex-column.nav-pills.me-3 .nav-link:hover,
+.nav.flex-column.nav-pills.me-3 .nav-link.active {
+    /* Цвет текста и фона после наведения и нажатия */
+    color: #000;
+    background-color: #bbff34;
+}
+
+.nav-link {
+    color: black; /* Цвет текста */
+    padding: 5px 10px; /* Отступы вокруг текста */
+    border: 1px solid black; /* Граница элемента */
+    display: inline-block; /* Отображение как блочный элемент */
+    text-decoration: none; /* Убираем подчеркивание */
+    transition: background-color 0.3s, color 0.3s; /* Плавное изменение цвета */
+
+}
+
+.nav-link:hover {
+    background-color: #bbff34; /* Цвет фона при наведении */
+    color: black; /* Цвет текста при наведении */
+}
+
+.nav-link:active {
+    background-color: #bbff34 !important; /* Цвет фона при нажатии */
+    color: white; /* Цвет текста при нажатии */
+}
+       .btn-create-table {
+   background-color: #bbff34;
+          color: #000;
+          padding: 2px 20px;
+          font-size: 14px;
+        border-radius: 10px;
+        }
+        .btn-primary {
+          background-color: #bbff34;
+          color: #000;
+          padding: 2px 20px;
+          font-size: 14px;
+        border-radius: 10px;
+
+        }
+
+    input[type="text"] {
+        font-size: 14px; /* Установите размер текста здесь */
+    }
+      /* Общий стиль для флажка */
+    input[type="checkbox"] {
+        -webkit-appearance: none; /* Убираем браузерные стили */
+        -moz-appearance: none;
+        appearance: none;
+        width: 15px; /* Ширина квадратика */
+        height: 15px; /* Высота квадратика */
+        border: 1px solid #000; /* Цвет рамки квадратика */
+        border-radius: 3px; /* Скругление углов квадратика */
+        outline: none; /* Убираем обводку при фокусе */
+        margin-bottom: 0px;
+    }
+
+    /* Стиль конкретного флажка */
+    input[type="checkbox"][name="active"]:checked {
+        background-color: #bbff34; /* Цвет фона при отметке флажка */
+    }
+      .custom-button {
+        background-color: #bbff34;
+          color: #000;
+          padding: 2px 20px;
+          font-size: 14px;
+        border-radius: 10px;
+}
+
+
+
+    </style>
+</head>
+<body>
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Добро пожаловать в раздел администрации!</h1>
+        <form method="post" action="create_content" enctype="multipart/form-data">
+            <button type="submit" class="btn btn-create-table">Создать таблицу</button>
+          <button class="custom-button" onclick="window.open('https://autoload.avito.ru/format/xmlcheck/', '_blank')">Проверить xml на авито</button>
+        </form>
+
+    </div>
+
+    <!-- Content goes here -->
+    <div class="d-flex align-items-start">
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            {% for j_key, j_value in json_data.items() %}
+                <button class="nav-link" id="v-pills-{{ j_key }}-tab" data-bs-toggle="pill"
+                        data-bs-target="#v-pills-{{ j_key }}" type="button" role="tab"
+                        aria-controls="v-pills-{{ j_key }}" aria-selected="false">
+
+                    {{ j_value[0].short_title }}
+
+                </button>
+            {% endfor %}
+        </div>
+
+        <div class="tab-content" id="v-pills-tabContent">
+            {% for j_key, j_value in json_data.items() %}
+                <div class="tab-pane fade" id="v-pills-{{ j_key }}" role="tabpanel"
+                     aria-labelledby="v-pills-{{ j_key }}-tab">
+                    {% for item in j_value %}
+                        <form id="update_table" method="post" action="update_table" enctype="multipart/form-data">
+                            <input type="hidden" name="url" value="{{ item.url }}">
+                            <button type="submit" class="btn btn-primary">Обновить данные в таблице</button>
+                        </form>
+                        <form method="post" action="update_content" enctype="multipart/form-data">
+                            <label>Название клиента</label>
+                            <h2><input type="text" name="short_title" value="{{ item.short_title }}"></h2>
+							<label >Ссылка на таблицу</label>
+							<p><a href="{{ item.url }}">{{ item.url }}</a></p>
+							<label>Ссылка XML</label>
+              <p><a href="{{ item.url }}/export?format=xlsx&gid=2077348259">{{ item.url }}/export?format=xlsx&gid=2077348259</a></p>
+							<label>
+								{% if item.active=="1": %}
+								<input type="checkbox"  name="active" value="1" checked> Активная таблица</label><br>
+							{% else %}
+								<input type="checkbox" name="active" value="0"> Активная таблица</label><br>
+							{% endif %}
+							<p></p>
+
+							<label >client id Avito</label>
+							<p><input type="text" name="client_id_Avito"value="{{ item.client_id_Avito }}" size="50">
+							</p>
+							<label >client secret Avito</label>
+							<p><input  type="text" name="client_secret_Avito" value="{{ item.client_secret_Avito }}" size="50">
+
+							</p>
+
+							<label >Token TimeWeb</label>
+							<p><input type="text" name="tokenTimeWeb" size="100" value="{{ item.tokenTimeWeb }}">
+
+							</p>
+							<p>Текущий бакет:  {{ item.bucket }}</p>
+							<!-- <label ></label><br>
+							<p></p>						 -->
+							<p>Выберите бакет:</p>
+
+							<p><input type="search" list="character" name="selbucket">
+							<datalist id="character">
+							{% for opt in item.buckets %}
+								<option value="{{ opt }}"></option>
+							{% endfor %}
+
+							</datalist>
+							</p>
+							<label >Путь до папки</label>
+							<p><input  name="path" value="{{item.path}}" size="50">
+
+							</p>
+
+							<!-- <p><textarea rows="2" cols="100" name="url">{{ item.url }}
+
+							</textarea></p> -->
+							<input type="hidden" name="id" value="{{ item.id }}">
+							<button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </form>
+                        <form id="formdelete" method="post" action="delete_content" enctype="multipart/form-data">
+                            <input type="hidden" name="short_title" value="{{ item.short_title }}">
+                            <button type="submit" class="btn btn-primary">Удалить клиента</button>
+                        </form>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+</body>
+</html>
