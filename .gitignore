@@ -4,3 +4,4 @@ old_credentials.json
 .ssh/
 *.db
 venv/
+.idea/
