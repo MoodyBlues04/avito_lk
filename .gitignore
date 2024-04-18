@@ -1,4 +1,5 @@
 erudite-spot-412112-513de6a60c81.json
+credentials.json
+old_credentials.json
 .ssh/
 *.db
-googleSheets.py
