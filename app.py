@@ -25,7 +25,7 @@ def home():
     return 'Добро пожаловать на главную страницу!'
 
 @app.route('/landing')
-def home():
+def landing():
     return render_template('landing.html')
 
 
