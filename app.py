@@ -22,7 +22,7 @@ def get_db_connection():
 
 @app.route('/')
 def home():
-    return 'Добро пожаловать на главную страницу!'
+    return render_template('landing.html')
 
 @app.route('/landing')
 def landing():
