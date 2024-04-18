@@ -3,3 +3,4 @@ credentials.json
 old_credentials.json
 .ssh/
 *.db
+venv/
