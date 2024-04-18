@@ -2,7 +2,6 @@ from flask import Flask, render_template, redirect, url_for, request, session
 import sqlite3
 import hashlib
 import os
-from werkzeug.utils import secure_filename
 import googleSheets
 import timeWeb
 import updateSheet
@@ -11,24 +10,24 @@ import updateSheet
 app = Flask(__name__)
 app.secret_key = 'your_secret_key440055'  # Замените на ваш секретный ключ
 
-
-
 path_to_save_images = os.path.dirname(os.path.abspath(__file__))
 path_to_save_images = os.path.join(path_to_save_images,'database.db')
 
 
-
 def get_db_connection():
-    print (1,path_to_save_images)
-    # print (2,app.root_path)
-    # path = rootPath.path()
     conn = sqlite3.connect(path_to_save_images)
     conn.row_factory = sqlite3.Row
     return conn
 
+
 @app.route('/')
 def home():
     return 'Добро пожаловать на главную страницу!'
+
+@app.route('/landing')
+def home():
+    return render_template('landing.html')
+
 
 @app.route('/process_registration', methods=['POST'])
 def process_registration():
@@ -37,25 +36,11 @@ def process_registration():
     password = request.form['password']
     return 'Регистрация успешно завершена!'
 
+
 @app.route('/register')
 def register():
     return render_template('register.html')
 
-@app.route('/sitlading')
-def sitlading():
-    return render_template('sitlading.html')
-
-@app.route('/support')
-def support():
-    return render_template('support.html')
-
-@app.route('/glav')
-def glav():
-    return render_template('glav.html')
-
-@app.route('/reference')
-def reference():
-    return render_template('reference.html')
 
 @app.route('/adm_login', methods=['GET', 'POST'])
 def admin_login():
@@ -80,9 +65,11 @@ def admin_login():
 
     return render_template('login_adm.html', error=error)
 
+
 @app.route('/')
 def index():
     return redirect(url_for('admin_login'))
+
 
 @app.route('/logout')
 def logout():
@@ -90,6 +77,7 @@ def logout():
     session.clear()
     # Перенаправление на главную страницу или страницу входа
     return redirect(url_for('index'))
+
 
 @app.route('/update_content', methods=['POST'])
 def update_content():
@@ -121,6 +109,7 @@ def update_content():
 
     return redirect(url_for('admin_panel'))
 
+
 @app.route('/delete_content', methods=['POST'])
 def delete_content():
     short_title = request.form['short_title']
@@ -132,6 +121,7 @@ def delete_content():
     conn.commit()
     conn.close()
     return redirect(url_for('admin_panel'))
+
 
 @app.route('/create_content', methods=['POST'])
 def create_content():
@@ -160,6 +150,7 @@ def create_content():
     conn.close()
 
     return redirect(url_for('admin_panel'))
+
 
 @app.route('/admin_panel')
 def admin_panel():
@@ -213,16 +204,14 @@ def admin_panel():
     # передаем на json на фронт - далее нужно смотреть admin_panel.html и обрабатывать там
     return render_template('admin_panel.html', json_data=json_data)
 
+
 @app.route('/update_table', methods=['POST'])
 def update_table():
     url = request.form['url']
     updateSheet.update(url)
     return redirect(url_for('admin_panel'))
 
-if __name__ == '__main__':
-    # app.run(debug=True)
-    print (1,path_to_save_images)
-    # print (2,app.root_path)
 
+if __name__ == '__main__':
     app.run(host='0.0.0.0')
     
